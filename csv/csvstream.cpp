@@ -13,7 +13,7 @@ size_t csvstream::where() const { return current_line; }
   
 bool csvstream::eof() const { return f.eof(); }
 void csvstream::ws() { f >> std::ws; current_line++; first=true; }
-void csvstream::flush() { f << std::endl; first=true; }
+void csvstream::flush() { f << std::endl; current_line++; first=true; }
   
 void csvstream::skip_to_eol() { while (f.get()!='\n'); }
   
