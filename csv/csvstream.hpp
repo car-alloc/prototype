@@ -36,6 +36,7 @@ class csvstream
       size_t where() const;
   
       bool eof() const;
+      operator bool() const { return (bool)f; }
       void ws();
       void flush();
   

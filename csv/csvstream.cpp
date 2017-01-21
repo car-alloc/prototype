@@ -1,6 +1,7 @@
 #include <string>
 #include <csvstream.hpp>
 
+#include <iostream>
 
 namespace std
  {
@@ -27,8 +28,8 @@ std::string csvstream::p_trim(const std::string & s) const
   if (trims)
    {
     std::string t(s);
-    while (s.front()==' ') t.erase(0);
-    while (s.back()==' ') t.pop_back();
+    while ((t.size()) && (t.front()==' ')) t.erase(0,1);
+    while ((t.size()) && (t.back()==' ')) t.pop_back();
     return t;
    }
   else
