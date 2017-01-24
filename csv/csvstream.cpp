@@ -137,6 +137,9 @@ std::string csvstream::p_get_next()
            )
          );
 
+  if (eof)
+   throw std::runtime_error("unexpected end of file");
+
   // if quotes are mismatched, or field
   // completely empty, then the syntax is
   // invalid
