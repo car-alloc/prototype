@@ -79,26 +79,31 @@ std::string csvstream::p_encode(const std::string & s) const
 ////////////////////////////////////////
 std::string csvstream::p_decode(const std::string & s) const
  {
-  size_t quotes=s.find("\"\"");
-
-  if (quotes)
+  if (s!="")
    {
-    std::string t(s);
+    size_t quotes=s.find("\"\"");
 
-    // replaces "" by " everywhere
-    while (quotes!=std::string::npos)
+    if (quotes)
      {
-      t.erase(quotes,1);
-      quotes=t.find("\"\"", quotes+1);
-     }
+      std::string t(s);
 
-    if ((t.front()=='"') && (t.back()=='"'))
-     return p_trim(t.substr(1,t.length()-2));
-    else
-     return p_trim(t);
-   }
+      // replaces "" by " everywhere
+      while (quotes!=std::string::npos)
+       {
+        t.erase(quotes,1);
+        quotes=t.find("\"\"", quotes+1);
+       }
+
+      if ((t.front()=='"') && (t.back()=='"'))
+       return p_trim(t.substr(1,t.length()-2));
+      else
+       return p_trim(t);
+     }
   else
    return p_trim(s);
+   }
+  else
+   return "";
  }
 
 ////////////////////////////////////////
