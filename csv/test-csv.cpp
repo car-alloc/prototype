@@ -45,6 +45,7 @@ int main()
    << std::endl;
   */
 
+  /*
   csvstream books("books.csv"); // std::ios::in par defaut
 
   std::cout << std::setprecision(2);
@@ -105,6 +106,31 @@ int main()
              << std::endl
      << std::endl;
    }
+  */
 
+  csvstream test("test-data/bogus.csv"); // std::ios::in par defaut
+
+  std::cout << std::setprecision(2);
+  while (test)
+   {
+    int machin;
+    std::string bidule,gugusse;
+    float patente;
+
+    test
+     >> machin
+     >> bidule
+     >> gugusse
+     >> patente
+     >> std::ws;
+
+    std::cout
+     << machin << std::endl
+     << bidule << std::endl
+     << gugusse << std::endl
+     << patente << std::endl
+     << std::endl;
+   }
+    
   return 0;
  }
