@@ -228,7 +228,16 @@ csvstream & csvstream::operator>>(float & f)
 ////////////////////////////////////////
 csvstream & csvstream::operator>>(double & f)
  {
-  f=std::stod(p_decode(p_get_next()));
+  if (empty_zero)
+   {
+    std::string t=p_decode(p_get_next());
+    if (t.size()==0)
+     f=0;
+    else
+     f=std::stod(t);
+   }
+  else
+   f=std::stod(p_decode(p_get_next()));
   return *this;
  }
 
