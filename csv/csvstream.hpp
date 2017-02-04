@@ -24,6 +24,7 @@ class csvstream
 
 
       ////////////////////////
+      void p_ws();
       std::string p_trim(const std::string & s) const;
       void p_put_comma();
       std::string p_encode(const std::string & s) const;
@@ -33,7 +34,9 @@ class csvstream
   public:
 
       /////////////////////////////////
-      size_t where() const;
+      std::fstream::pos_type tellg() { return f.tellg(); }
+      std::fstream::pos_type tellp() { return f.tellp(); }
+      size_t where() const { return current_line; }
   
       bool eof() const;
       operator bool() const { return (bool)f; }

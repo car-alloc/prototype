@@ -1,8 +1,6 @@
 #include <string>
 #include <csvstream.hpp>
 
-#include <iostream>
-
 namespace std
  {
   csvstream & endl(csvstream & out) { out.flush(); return out; }
@@ -10,17 +8,20 @@ namespace std
  }
 
 /////////////////////////////////////////
-size_t csvstream::where() const { return current_line; }
-  
 bool csvstream::eof() const { return f.eof(); }
-void csvstream::ws() { f >> std::ws; current_line++; first=true; }
 void csvstream::flush() { f << std::endl; current_line++; first=true; }
-  
 void csvstream::skip_to_eol() { while (f.get()!='\n'); }
-  
 void csvstream::text_as_bool(bool b) { text_bool=b; }
 void csvstream::empty_as_zero(bool z) { empty_zero=z; }
 void csvstream::trim(bool t) { trims=t; }
+
+////////////////////////////////////////
+void csvstream::ws()
+ {
+  f >> std::ws;
+  current_line++;
+  first=true;
+ }
 
 ////////////////////////////////////////
 std::string csvstream::p_trim(const std::string & s) const
@@ -122,17 +123,16 @@ std::string csvstream::p_get_next()
    {
     comma=eol=eof=false;
 
-    length++;
+    length++; // contains at least trailing eof,eol, or ,
 
     switch (f.get())
      {
-     case '"':quotes++; break;
-     case ',':comma=true; break;
-     case '\r':
-     case '\n': eol=true; break;
-     case std::char_traits<char>::eof(): eof=true; break;
+      case '"':quotes++; break;
+      case ',':comma=true; break;
+      case '\n': eol=true; break; //case '\r' is dealt with later
+      case std::char_traits<char>::eof(): eof=true; break;
 
-     default: break;
+      default: break;
      }
    }
   while (!(
@@ -145,10 +145,9 @@ std::string csvstream::p_get_next()
   if (eof)
    throw std::runtime_error("unexpected end of file");
 
-  // if quotes are mismatched, or field
-  // completely empty, then the syntax is
-  // invalid
-  if ((quotes & 1) || (length==0))
+  // if quotes are mismatched then
+  // the syntax is invalid
+  if (quotes & 1)
    throw std::runtime_error("invalid syntax");
   else
    if (length<=max_field_length)
@@ -158,14 +157,19 @@ std::string csvstream::p_get_next()
      // rewinds to the start of the field
      f.seekg(start);
 
-     // reads until , or eol
+     // reads until , or eol, or eof
      for (size_t i=0;i<length;i++)
       t[i]=f.get();
 
      // if trailing , or eol (and therefore \n)
      // remove it
-     if (comma||eol) t.pop_back();
+     if (comma||eol)
+      {
+       t.pop_back();
+       if (t.size() && t.back()=='\r') t.pop_back();
+      }
 
+     first=false; // not the first field anymore
      return t;
     }
    else
