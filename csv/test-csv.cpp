@@ -108,13 +108,14 @@ int main()
    }
   */
 
-  csvstream test("test-data/bogus.csv"); // std::ios::in par defaut
+  /*
+  csvstream test("test-data/short3.csv"); // std::ios::in par defaut
 
   std::cout << std::setprecision(2);
-  while (test)
+  while (!test.eof())
    {
     int machin;
-    std::string bidule,gugusse;
+    std::string bidule,gugusse,cossin;
     float patente;
 
     test
@@ -122,6 +123,7 @@ int main()
      >> bidule
      >> gugusse
      >> patente
+     >> cossin
      >> std::ws;
 
     std::cout
@@ -129,8 +131,40 @@ int main()
      << bidule << std::endl
      << gugusse << std::endl
      << patente << std::endl
+     << cossin << std::endl
      << std::endl;
    }
+  */
+
+  csvstream test("test-data/empty-lines.csv");
+
+
+  while (!test.eof())
+   {
+    int a,l;
+    std::string b,c;
+    float d;
+
+    try
+     {
+      test >> l >> a >> b >> c >> d >> std::ws;
+
+      std::cout
+       << test.where()
+       << '\t'
+       << l << ','
+       << a << ',' << b << ",[" << c << "]," << d
+       << std::endl;
+     }
     
+    catch (std::exception & e)
+     {
+      std::cerr
+       << "line: " << test.where()
+       << " (at pos " << test.tellg() << ")\t"
+       << e.what() << std::endl;
+     }
+   }
+  
   return 0;
  }
